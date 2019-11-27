@@ -10,16 +10,20 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
+    % Apps
     ok = application:start(sasl),
     ok = application:start(cowlib),
     ok = application:start(ranch),
     ok = application:start(cowboy),
-
+    % DB
+    ok = mnesia:start(),
+    % Cowboy
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/", toppage_h, []},
             {"/jsx", jsx_h, []},
-            {"/record", record_h, []}
+            {"/record", record_h, []},
+            {"/mnesia", mnesia_h, []}
         ]}
     ]),
     {ok, _} = cowboy:start_clear(http, [{port, 8080}], #{
