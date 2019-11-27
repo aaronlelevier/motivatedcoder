@@ -19,7 +19,12 @@
 create_tables() ->
   mnesia:create_schema([node()]),
   mnesia:start(),
-  mnesia:create_table(bike, [{attributes, record_info(fields, bike)}]),
+  mnesia:create_table(
+    bike, [
+      {attributes, record_info(fields, bike)},
+      {disc_copies, [node()]}
+    ]
+  ),
   mnesia:stop().
 
 insert(Row) ->
