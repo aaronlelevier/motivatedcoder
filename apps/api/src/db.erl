@@ -9,7 +9,9 @@
 -module(db).
 -author("aaron lelevier").
 -include_lib("stdlib/include/qlc.hrl").
+
 -include_lib("records.hrl").
+-include_lib("macros.hrl").
 
 -compile(export_all).
 -export([]).
@@ -26,7 +28,9 @@ create_tables() ->
       {disc_copies, [node()]}
     ]
   ),
-  stopped = mnesia:stop().
+  stopped = mnesia:stop(),
+  ok.
+
 
 %% 'bike' table w/ disc copies
 -spec ram_init() -> ok.
