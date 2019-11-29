@@ -5,7 +5,10 @@
   {mod, {api_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    mnesia,
+    cowboy,
+    jsx
    ]},
   {env,[]},
   {modules, []},

@@ -16,20 +16,36 @@
 
 %% records
 
+%% 'bike' table w/ disc copies
 create_tables() ->
-  mnesia:create_schema([node()]),
-  mnesia:start(),
-  mnesia:create_table(
+  ok = mnesia:create_schema([node()]),
+  ok = mnesia:start(),
+  {atomic, ok} = mnesia:create_table(
     bike, [
       {attributes, record_info(fields, bike)},
       {disc_copies, [node()]}
     ]
   ),
-  mnesia:stop().
+  stopped = mnesia:stop().
+
+%% 'bike' table w/ disc copies
+-spec ram_init() -> ok.
+ram_init() ->
+  ok = mnesia:start(),
+  % create bike table
+  {atomic, ok} = mnesia:create_table(
+    bike, [
+      {attributes, record_info(fields, bike)}
+    ]
+  ),
+  % populate
+  Bike = bike:init(<<"Meta AM HT">>, 1399),
+  {atomic, ok} = db:insert(Bike),
+  ok.
 
 insert(Row) ->
   F = fun() -> mnesia:write(Row) end,
-  mnesia:transaction(F).
+  {atomic, ok} = mnesia:transaction(F).
 
 select(Table) ->
   do(qlc:q([X || X <- mnesia:table(Table)])).

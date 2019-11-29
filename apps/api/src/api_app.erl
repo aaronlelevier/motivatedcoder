@@ -10,13 +10,8 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
-    % Apps
-    ok = application:start(sasl),
-    ok = application:start(cowlib),
-    ok = application:start(ranch),
-    ok = application:start(cowboy),
     % DB
-    ok = mnesia:start(),
+    ok = db:ram_init(),
     % Cowboy
     Dispatch = cowboy_router:compile([
         {'_', [
