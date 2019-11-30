@@ -24,6 +24,8 @@ IMPORTANT - must be installed before Erlang, if `openssl` isn't present, Erlang 
 # gcc deps
 sudo apt-get install build-essential
 
+sudo apt-get update --fix-missing
+
 # openssl
 sudo apt-get install libssl-dev
 
@@ -69,4 +71,36 @@ sudo ln -s /home/ubuntu/otp_src_22.1/bin/ /usr/local/bin/
 ```
 wget https://s3.amazonaws.com/rebar3/rebar3 && chmod +x rebar3
 PATH="/home/ubuntu/rebar3:${PATH}"
+```
+
+# Install try 2 (working :)
+
+Base [blog](https://tecadmin.net/install-erlang-on-ubuntu/) installation documenting process
+
+Ubuntu Packages needed
+
+```
+# gcc deps
+sudo apt-get install build-essential
+
+# needed to locate openssl
+sudo apt-get update --fix-missing
+
+# openssl
+sudo apt-get install libssl-dev
+
+# erl deps
+sudo apt-get install libncurses5-dev libncursesw5-dev
+```
+
+[Downloads from Erlang Solutions](https://www.erlang-solutions.com/resources/download.html)
+
+```
+# Needed before *.deb for Erlang install would work
+sudo apt-get install libsctp1
+sudo apt --fix-broken install
+
+# Then install
+wget https://packages.erlang-solutions.com/erlang/debian/pool/esl-erlang_22.1.8-1~ubuntu~bionic_amd64.deb
+sudo dpkg -i esl-erlang_22.1.8-1~ubuntu~bionic_amd64.deb
 ```
