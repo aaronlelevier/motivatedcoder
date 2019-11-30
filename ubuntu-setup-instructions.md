@@ -4,12 +4,21 @@ Notes on how to install and configure Erlang for Unbuntu
 
 ## Initial setup
 
+**Env VARs**
+
+```
+
+export ERL_TOP=/home/ubuntu/otp_src_22.1
+
+# fixes issues on some systems w/ Perl (not sure if I need this?)
+export LANG=C
+```
 
 **Code:**
 
 Ubuntu Dependencies
 
-IMPORTANT - must be installed before Erlang
+IMPORTANT - must be installed before Erlang, if `openssl` isn't present, Erlang won't install crypto.so, etc.. and will have issues
 
 ```
 # gcc deps
@@ -53,7 +62,9 @@ PATH="/home/ubuntu/otp_src_22.1/bin:${PATH}"
 sudo ln -s /home/ubuntu/otp_src_22.1/bin/ /usr/local/bin/
 ```
 
-Rebar3 install
+**Rebar3 install**
+
+[rebar3 docs](https://github.com/erlang/rebar3#getting-started)
 
 ```
 wget https://s3.amazonaws.com/rebar3/rebar3 && chmod +x rebar3
