@@ -14,6 +14,7 @@
 
 -define(PG_TABLE, "djangoaws").
 
+-spec connect() -> pid().
 connect() ->
   {ok, C} = epgsql:connect("localhost", "postgres", "postgres", #{
     database => ?PG_TABLE,
@@ -44,16 +45,24 @@ query(Q) ->
 %% that can then be converted to JSON using `jsx`
 -spec to_list(QResult:: tuple()) -> list().
 to_list(QResult) ->
-  {ok, ColInfo, _Rows} = QResult,
-  Columns = [ColName || {column, ColName, _, _, _, _, _} <- ColInfo],
-%%  [lists:zip(Columns, tuple_to_list(R)) || R <- Rows].
-  [lists:zip(Columns, tuple_to_list(R)) || R <- example_rows()].
+  {ok, ColInfo, Rows} = QResult,
+  ColNames = [ColName || {column, ColName, _ColType, _, _, _, _} <- ColInfo],
+  ColTypes = [ColType || {column, _ColName, ColType, _, _, _, _} <- ColInfo],
+  L = [lists:zip3(ColNames, ColTypes, tuple_to_list(R)) || R <- Rows],
+  [convert_jsonb(X) || X <- L].
 
-example_rows() ->
-  Rows = [{
-    <<"6">>,<<"0">>,<<"ami-0d5d9d301c853a04a">>,
-    <<"i-0b97590d72d533b10">>,<<"t2.micro">>,
-    <<"motivatedcoder">>,<<"2019-11-30 09:13:27-08">>,
-    [{<<"State">>, <<"disabled">>}]
-  }],
-  Rows.
+-spec convert_jsonb(L::list()) -> list().
+convert_jsonb(L) ->
+  convert_jsonb(L, []).
+
+-spec convert_jsonb(list(), Acc::list()) -> list().
+convert_jsonb([], Acc) -> lists:reverse(Acc);
+convert_jsonb([H|T], Acc) ->
+  {ColName, ColType, Value} = H,
+  Value2 = case ColType of
+    jsonb ->
+      jsx:decode(Value);
+    _ ->
+      Value
+  end,
+  convert_jsonb(T, [{ColName, Value2}|Acc]).
