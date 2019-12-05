@@ -12,7 +12,7 @@
 
 %% cowboy
 -export([
-  init/2, allowed_methods/2,content_types_provided/2,
+  init/2, allowed_methods/2, content_types_provided/2,
   content_types_accepted/2]).
 
 %% app
@@ -41,7 +41,10 @@ json_get(Req, State) ->
 json_post(Req, State) ->
   % example of reading request body
   {ok, [{Payload, true}], _Req} = cowboy_req:read_urlencoded_body(Req),
-  ?DEBUG(jsx:decode(Payload)),
+  ?DEBUG({payload, Payload}),
+
+  JsonPayload = jsx:decode(Payload),
+  ?DEBUG({json_payload, JsonPayload}),
 
   % example of adding a response payload
   Req2 = Req#{resp_body => jsx:encode(#{hey => <<"you">>})},
