@@ -104,3 +104,12 @@ sudo apt --fix-broken install
 wget https://packages.erlang-solutions.com/erlang/debian/pool/esl-erlang_22.1.8-1~ubuntu~bionic_amd64.deb
 sudo dpkg -i esl-erlang_22.1.8-1~ubuntu~bionic_amd64.deb
 ```
+
+## Serve Erlang
+
+[install nginx blog](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04)
+
+```
+# install nginx
+sudo apt-get install nginx
+```
